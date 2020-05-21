@@ -22,6 +22,8 @@ router.delete('/recipient/:id',RecipientController.delete);
 
 router.post('/delivery',DelivController.store);
 router.get('/delivery', DelivController.index);
+router.put('/delivery/:id',DelivController.update);
+router.delete('/delivery/:id',DelivController.delete);
 
 router.post('/file',upLoad.single('file'),FileController.store);
 

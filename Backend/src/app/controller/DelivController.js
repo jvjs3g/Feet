@@ -1,7 +1,6 @@
 import * as Yup from 'yup';
 import Deliv from '../models/Deliv';
-import User from '../models/User';
-import File from '../models/File';
+
 
 class DelivController{
 
@@ -51,5 +50,53 @@ class DelivController{
     });
     return response.json(deliv);
   }
+
+  async update(request,response){
+    
+    const schema = Yup.object().shape({
+      name:Yup.string(),
+      email:Yup.string().email(),
+      avatar_id:Yup.number()
+    });
+
+    if(!(await schema.isValid(request.body))){
+      return response.status(400).json({error:'Validation fails'})
+    }
+
+    const { email } = request.body;
+
+    const delivery = await Deliv.findByPk(request.params.id);
+    
+    if(email && email != delivery.email){
+
+      const deliveryExists = await Deliv.findOne({
+        where:{
+          email
+        }
+      });
+
+      if(deliveryExists){
+        return response.status(400).json({error:'Deliv already exists.'});
+      }
+    }
+    await delivery.update(request.body);
+
+    return response.json(delivery);
+  }
+  
+  async delete(request,response){
+    const user_id = request.userId;
+
+    const DelivCreatedBy = await Deliv.findByPk(request.params.id);
+
+    if(DelivCreatedBy.user_id != user_id){
+      return response.status(401).json({error:"You don't have permission to cancel this Deliv."});
+    }
+
+    await DelivCreatedBy.destroy();
+
+    return response.json(DelivCreatedBy);
+  }
+
 }
 export default new DelivController();
