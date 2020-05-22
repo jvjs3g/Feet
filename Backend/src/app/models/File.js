@@ -24,4 +24,3 @@ class File extends Model{
 }
 
 export default File;
-

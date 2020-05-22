@@ -1,4 +1,4 @@
-import Sequelize, { Model } from 'Sequelize';
+import Sequelize, { Model } from 'sequelize';
 
 class Deliv extends Model{
   static init(sequelize){
