@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import {startOfHour , parseISO , isBefore } from 'date-fns';
+import {startOfHour , parseISO , isBefore, isAfter } from 'date-fns';
 import Shopping from '../models/Shopping';
 
 class ShoppingController{
@@ -26,14 +26,23 @@ class ShoppingController{
     if(isBefore(hourCanceled_at, new Date())){
       return response.status(400).json({ error:'Past dates are not permitted cenceled.'});
     }
+    
 
     const hourStart_date = startOfHour(parseISO(start_date));
 
     if(isBefore(hourStart_date, new Date())){
       return response.status(400).json({ error:'Past dates are not permitted in start date.'});
     }
-    
 
+
+    const data = start_date.split('T');
+    const horaNotFormated = data[1].split('-');
+    const hora = horaNotFormated[0]
+
+    if(hora < '08:00:00' || hora >= '18:00:00'){
+      return response.status(400).json({error:'time not allowed for withdrawals'});
+    }
+  
     const shoppoing = await Shopping.create(request.body);
 
     return response.json(shoppoing);
