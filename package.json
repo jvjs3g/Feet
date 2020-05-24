@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@sentry/node": "5.15.5"
+  }
+}

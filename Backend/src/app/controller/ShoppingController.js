@@ -1,7 +1,10 @@
 import * as Yup from 'yup';
 import {startOfHour , parseISO , isBefore, isAfter } from 'date-fns';
 import Shopping from '../models/Shopping';
-import shoppingMail from '../jobs/OrderMail';
+import Queue from '../../lib/Queue';
+import Deliv from '../models/Deliv';
+import Recipient from '../models/Recipient';
+import OrderMail from '../jobs/OrderMail';
 
 class ShoppingController{
   async store(request,response){
@@ -15,6 +18,11 @@ class ShoppingController{
       start_date:Yup.date(),
       end_date:Yup.date(),
     });
+
+
+    const { name, email } = await Deliv.findByPk(request.body.deliv_id);
+    const { name:recebidor ,  rua , numero , complemento, cep } = await Recipient.findByPk(request.body.recipient_id);
+    const { product } = request.body;
 
     if(!(await schema.isValid(request.body))){
       return response.status(400).json({error:'Validation fails'});
@@ -48,10 +56,17 @@ class ShoppingController{
 
     const shoppoing = await Shopping.create(request.body);
 
-    await shoppingMail({
-      shoppoing
-    });
-    
+    await Queue.add(OrderMail.key,{
+      name,
+      email,
+      product,
+      rua,
+      numero,
+      complemento,
+      cep,
+      recebidor
+    })
+
     return response.json(shoppoing);
   }
 

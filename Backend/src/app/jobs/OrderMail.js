@@ -2,22 +2,24 @@ import Mail from '../../lib/Mail';
 
 class OrderMail{
   get key(){
-    return 'OrderMail'
+    return 'OrderMail';
   }
 
+  async handle({ data }){
 
-  async handle({data}){
-    const { shopping } = data;
-
+    const {name, email, product, rua, numero, complemento, cep, recebidor } = data;
+    
     await Mail.sendMail({
-      to:`${shopping.deliv.name}< ${shopping.deliv.email}>`,
-      subject:'serviço a ser prestado',
-      template:'Order',
+      to: `${name} <${email}>`,
+      subject:'Entrega a ser feita',
+      template:'order',
       context:{
-        recipient:shopping.recipient.name,
-        shopping:shopping.product,
+        deliv:name,
+        shopping:product,
+        recipient:`Endereço: ${rua}, ${numero}, ${complemento}, ${cep}  Entregar para : ${recebidor}`,
       }
     });
   }
 }
+
 export default new OrderMail();

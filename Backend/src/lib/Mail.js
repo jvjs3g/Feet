@@ -26,7 +26,7 @@ class Mail{
         extname:'.hbs',
       }),
       viewPath,
-      extname:'.hbs',
+      extName:'.hbs',
     }));
   }
 
