@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import {startOfHour , parseISO , isBefore, isAfter } from 'date-fns';
 import Shopping from '../models/Shopping';
+import shoppingMail from '../jobs/OrderMail';
 
 class ShoppingController{
   async store(request,response){
@@ -8,7 +9,7 @@ class ShoppingController{
     const schema = Yup.object().shape({
       recipient_id:Yup.number().required(),
       deliv_id:Yup.number().required(),
-      signature_id:Yup.number().required(),
+      signature_id:Yup.number(),
       product:Yup.string().required(),
       canceled_at:Yup.date(),
       start_date:Yup.date(),
@@ -43,8 +44,14 @@ class ShoppingController{
       return response.status(400).json({error:'time not allowed for withdrawals'});
     }
   
+
+
     const shoppoing = await Shopping.create(request.body);
 
+    await shoppingMail({
+      shoppoing
+    });
+    
     return response.json(shoppoing);
   }
 
