@@ -21,6 +21,7 @@ class Shopping extends Model{
     this.belongsTo(models.Deliv, { foreignKey: 'deliv_id' , as:'deliv'}),
     this.belongsTo(models.File, { foreignKey: 'signature_id' , as:'signature'}),
     this.belongsTo(models.Recipient, { foreignKey: 'recipient_id' , as:'recipient'});
+    this.belongsTo(models.User, { foreignKey:'user_id' , as:'user'});
   }
 
 }

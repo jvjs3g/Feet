@@ -76,11 +76,16 @@ class RecipientController{
       cep:Yup.string(),
     });
 
+    const recipient = await Recipient.findByPk(request.params.id);
+
+    if(recipient == null){
+      return response.status(401).json('Sorry, Recipient not found.')
+    }
+
+
     if(!(await schema.isValid(request.body))){
       return response.status(400).json({error:'Validation fails'})
     }
-
-    const recipient = await Recipient.findByPk(request.params.id);
     
     await recipient.update(request.body);
 
@@ -91,6 +96,11 @@ class RecipientController{
     const user_id = request.userId;
 
     const recipientCreatedBy = await Recipient.findByPk(request.params.id);
+
+    if(recipientCreatedBy == null){
+      return response.status(401).json('Sorry, Recipient not found.')
+    }
+
 
     if(recipientCreatedBy.user_id != user_id){
       return response.status(401).json({

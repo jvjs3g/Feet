@@ -5,7 +5,7 @@ import Deliv from '../models/Deliv';
 class DelivController{
 
 
-  async index(request,response){
+  async index(request,response){  
     const { page = 1 } = request.query;
 
     const delivery = await Deliv.findAll({
@@ -67,6 +67,11 @@ class DelivController{
 
     const delivery = await Deliv.findByPk(request.params.id);
     
+    if(delivery == null){
+      return response.status(401).json('Sorry, Delivery not found.')
+    }
+
+
     if(email && email != delivery.email){
 
       const deliveryExists = await Deliv.findOne({
@@ -88,6 +93,11 @@ class DelivController{
     const user_id = request.userId;
 
     const DelivCreatedBy = await Deliv.findByPk(request.params.id);
+
+    if(DelivCreatedBy == null){
+      return response.status(401).json('Sorry, Delivery not found.')
+    }
+
 
     if(DelivCreatedBy.user_id != user_id){
       return response.status(401).json({error:"You don't have permission to cancel this Deliv."});

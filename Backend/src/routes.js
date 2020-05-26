@@ -8,9 +8,12 @@ import SessionController from './app/controller/SessionController';
 import RecipientController from './app/controller/RecipientController';
 import DelivController from './app/controller/DelivController';
 import ShoppingController from './app/controller/ShoppingController';
+import DeliveryShopping from './app/controller/DeliveryShopping';
 
 const router = new Router();
 const upLoad = multer(multerConfig);
+
+router.get('/delivery/:id/shopping',DeliveryShopping.index);
 
 router.post('/user',UserController.store);
 router.post('/session',SessionController.store);
@@ -27,6 +30,10 @@ router.put('/delivery/:id',DelivController.update);
 router.delete('/delivery/:id',DelivController.delete);
 
 router.post('/shopping',ShoppingController.store);
+router.get('/shopping',ShoppingController.index);
+router.put('/shopping/:id',ShoppingController.update);
+router.delete('/shopping/:id',ShoppingController.delete);
+
 
 router.post('/file',upLoad.single('file'),FileController.store);
 
