@@ -9,11 +9,12 @@ import RecipientController from './app/controller/RecipientController';
 import DelivController from './app/controller/DelivController';
 import ShoppingController from './app/controller/ShoppingController';
 import DeliveryShopping from './app/controller/DeliveryShopping';
-
+import DeliveryStatusShopping from './app/controller/DeliveryStatusShopping';
 const router = new Router();
 const upLoad = multer(multerConfig);
 
 router.get('/delivery/:id/shopping',DeliveryShopping.index);
+router.put('/delivery/:id/shopping',DeliveryStatusShopping.update);
 
 router.post('/user',UserController.store);
 router.post('/session',SessionController.store);

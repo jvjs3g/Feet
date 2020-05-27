@@ -10,10 +10,10 @@ class ShoppingController{
   async store(request,response){
 
     const schema = Yup.object().shape({
-      recipient_id:Yup.number().required(),
-      deliv_id:Yup.number().required(),
+      recipient_id:Yup.number(),
+      deliv_id:Yup.number(),
       signature_id:Yup.number(),
-      product:Yup.string().required(),
+      product:Yup.string(),
       canceled_at:Yup.date(),
       start_date:Yup.date(),
       end_date:Yup.date(),
