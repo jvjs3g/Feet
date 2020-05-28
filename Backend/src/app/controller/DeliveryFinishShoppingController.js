@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import Shopping from '../models/Shopping';
 
 
-class DeliveryFinishShopping{
+class DeliveryFinishShoppingController{
   async update(request,response){
     
     const deliv_id = request.params.id;
@@ -35,4 +35,4 @@ class DeliveryFinishShopping{
   }
 }
 
-export default new DeliveryFinishShopping();
+export default new DeliveryFinishShoppingController();

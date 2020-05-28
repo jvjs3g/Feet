@@ -1,6 +1,6 @@
 import File from '../models/File';
 
-class DeliveryUpPhoto{
+class DeliveryUpPhotoController{
   async store (request,response){
     const { originalname:name, filename:path } = request.file;
 
@@ -12,4 +12,4 @@ class DeliveryUpPhoto{
   }
 }
 
-export default new DeliveryUpPhoto();
+export default new DeliveryUpPhotoController();

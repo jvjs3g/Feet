@@ -1,6 +1,6 @@
 import Shopping from '../models/Shopping'; 
 
-class DeliveryShopping{
+class DeliveryShoppingController{
   async index(request,response){
     const deliv_id = request.params.id;
 
@@ -18,4 +18,4 @@ class DeliveryShopping{
      
   }
 }
-export default new DeliveryShopping();
+export default new DeliveryShoppingController();

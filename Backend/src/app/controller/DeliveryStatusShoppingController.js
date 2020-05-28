@@ -3,7 +3,7 @@ import {isAfter, isBefore, setSeconds,setHours,setMinutes,startOfDay,endOfDay,pa
 import { Op } from 'sequelize';
 import Shopping from '../models/Shopping';
 
-class DeliveryStatusShopping{
+class DeliveryStatusShoppingController{
   async update(request,response){
     
     
@@ -62,4 +62,4 @@ class DeliveryStatusShopping{
   }
 }
 
-export default new DeliveryStatusShopping();
+export default new DeliveryStatusShoppingController();
