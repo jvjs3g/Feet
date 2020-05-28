@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import {isAfter, isBefore, setSeconds,setHours,setMinutes,startOfDay,endOfDay } from 'date-fns';
+import {isAfter, isBefore, setSeconds,setHours,setMinutes,startOfDay,endOfDay,parseISO } from 'date-fns';
 import { Op } from 'sequelize';
 import Shopping from '../models/Shopping';
 
@@ -23,49 +23,42 @@ class DeliveryStatusShopping{
     const schema = Yup.object().shape({
       shopping_id:Yup.string().required(),
       start_date:Yup.date(),
-      end_date:Yup.date(),
     });
-
+//
     if(!(await schema.isValid(request.body))){
       return response.status(400).json({error:'Validation fails'});
     }
 
-    const dateAfter = setSeconds(setMinutes(setHours(new Date(), 8), 0), 0);
-    const dateBefore = setSeconds(setMinutes(setHours(new Date(), 23), 0), 0);
+    const startDate = parseISO(request.body.start_date);
 
-    const checkhours = isAfter(new Date(), dateAfter) && isBefore(new Date(), dateBefore);
+    const dateAfter = setSeconds(setMinutes(setHours(startDate, 8), 0), 0);
+    const dateBefore = setSeconds(setMinutes(setHours(startDate, 22), 0), 0);
 
-    if(!checkhours){
-      return response.status(401).json({error:'The shopping can only be taken between 9am and 6pm'});
+    if (isAfter(startDate, dateBefore) || isBefore(startDate, dateAfter)) {
+      return response.status(400).json({ error: 'Orders pickup only between 08:00 and 18:00h' });
     }
-    const { start_date: data } = request.body;
-    const { start_date } = await Shopping.findAll({where:{start_date:data}})
-    
 
-
-
-    const checkShoppingDate = await Shopping.findAll({
+    const shoppingOfday = await Shopping.findAll({
       where: {
-        deliv_id,
+        start_date: {
+          [Op.between]: [startOfDay(startDate), endOfDay(startDate)],
+        },
       },
     });
 
-
-    if(checkShoppingDate.length >= 51){
-  
-      return response.status(401).json({ error: 'You can only takes 5 shopping today' });
+    if(shoppingOfday.length >= 5){
+      return response.status(401).json({error:"sorry, you can't make more than 5 deliver in a day"})
     }
 
+    const { shopping_id } = request.body;
 
-    const order = await Shopping.findOne({
-      where:{
-        id:request.body.shopping_id,
-      }
-    });
-    
-    order.update(request.body);
+    const shop = await Shopping.findByPk(request.body.shopping_id);
+    if(shop.end_date !== null){
+      return response.status(401).json({error:'this shopping has already been completed.'});
+    }
+    await shop.update(request.body);
 
-    return response.json(order);
+    return response.json(shop);
   }
 }
 

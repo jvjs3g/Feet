@@ -10,11 +10,16 @@ import DelivController from './app/controller/DelivController';
 import ShoppingController from './app/controller/ShoppingController';
 import DeliveryShopping from './app/controller/DeliveryShopping';
 import DeliveryStatusShopping from './app/controller/DeliveryStatusShopping';
+import DeliveryFinishShopping from  './app/controller/DeliveryFinishShopping';
+import DeliveryUpPhoto from './app/controller/DeliveryUpPhoto';
 const router = new Router();
 const upLoad = multer(multerConfig);
 
 router.get('/delivery/:id/shopping',DeliveryShopping.index);
 router.put('/delivery/:id/shopping',DeliveryStatusShopping.update);
+router.put('/delivery/:id/shoppingFinish',DeliveryFinishShopping.update);
+router.post('/delivery/photo',upLoad.single('file'),DeliveryUpPhoto.store);
+
 
 router.post('/user',UserController.store);
 router.post('/session',SessionController.store);

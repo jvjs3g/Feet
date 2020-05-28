@@ -1,20 +1,15 @@
 import File from '../models/File';
 
-class FileController{
+class DeliveryUpPhoto{
   async store (request,response){
-    const { originalname: name , filename:path } = request.file;
+    const { originalname:name, filename:path } = request.file;
 
     const file = await File.create({
       name,
-      path,
+      path
     });
     return response.json(file);
   }
 }
 
-export default new FileController();
-
-
-
-
-
+export default new DeliveryUpPhoto();
