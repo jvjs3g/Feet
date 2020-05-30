@@ -12,7 +12,7 @@ import DeliveryShopping from './app/controller/DeliveryShoppingController';
 import DeliveryStatusShopping from './app/controller/DeliveryStatusShoppingController';
 import DeliveryFinishShopping from  './app/controller/DeliveryFinishShoppingController';
 import DeliveryUpPhoto from './app/controller/DeliveryUpPhotoController';
-import ShoppingProblems from './app/controller/ShoppingProblemsController';
+import DelivProblems from './app/controller/DelivProblemsController';
 
 const router = new Router();
 const upLoad = multer(multerConfig);
@@ -21,7 +21,8 @@ router.get('/delivery/:id/shopping',DeliveryShopping.index);
 router.put('/delivery/:id/shopping',DeliveryStatusShopping.update);
 router.put('/delivery/:id/shoppingFinish',DeliveryFinishShopping.update);
 router.post('/delivery/photo',upLoad.single('file'),DeliveryUpPhoto.store);
-router.post('/delivery/:id/problems',ShoppingProblems.store);
+router.post('/delivery/problems/:id',DelivProblems.store);
+
 
 router.post('/user',UserController.store);
 router.post('/session',SessionController.store);
@@ -42,6 +43,8 @@ router.get('/shopping',ShoppingController.index);
 router.put('/shopping/:id',ShoppingController.update);
 router.delete('/shopping/:id',ShoppingController.delete);
 
+router.get('/delivery/problems',DelivProblems.index);
+router.get('/delivery/problems/:id',DelivProblems.show);
 
 router.post('/file',upLoad.single('file'),FileController.store);
 
