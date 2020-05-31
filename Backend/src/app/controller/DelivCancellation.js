@@ -1,3 +1,4 @@
+import { parseISO} from 'date-fns';
 import Shopping from '../models/Shopping';
 import DelivProblem from '../models/DelivProblem';
 import Deliv from '../models/Deliv';
@@ -5,8 +6,9 @@ import Recipient from '../models/Recipient';
 import CancellationMail from '../jobs/CancellationMail';
 import Queue from '../../lib/Queue';
 
+
 class DelivCancellation{
-  async delete(request,response){
+  async update(request,response){
 
     const idProblem = request.params.id;
 
@@ -17,12 +19,15 @@ class DelivCancellation{
     const shopping = await Shopping.findByPk(delivery_id);
     const {name:recebidor, rua, numero, complemento, cep} = await Recipient.findByPk(shopping.recipient_id);
     const { product } = shopping;
-    const {name, email} = await Deliv.findByPk(delivery.deliv_id);
+    const {name, email} = await Deliv.findByPk(shopping.deliv_id);
 
 
     shopping.canceled_at = new Date();
-    shopping.save();
+    const { canceled_at:canceled } = shopping;
 
+    shopping.save();
+    const { canceled_at:date } = shopping;  
+    
     await Queue.add(CancellationMail.key,{
       problema,
       product,
@@ -32,7 +37,8 @@ class DelivCancellation{
       complemento,
       cep,
       name,
-      email
+      email,
+      date
     }); 
     
     return response.json(shopping);

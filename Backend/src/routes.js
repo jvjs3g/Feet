@@ -47,7 +47,7 @@ router.delete('/shopping/:id',ShoppingController.delete);
 router.get('/delivery/problems',DelivProblems.index);
 router.get('/delivery/problems/:id',DelivProblems.show);
 
-router.delete('/problem/:id/cancellation',DelivCancellation.delete)
+router.put('/problem/:id/cancellation',DelivCancellation.update);
 
 router.post('/file',upLoad.single('file'),FileController.store);
 
